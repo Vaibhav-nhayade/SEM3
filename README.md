@@ -1,13 +1,13 @@
 
-**RC Patel Institute of Technology, Shirpur**
+**RC Patel Institute of Technology, Shirpur** <br>
 **Department of AI & DS – Semester 3**
 
 ## **Project Team**
 
-* **PAWAN KISHORE MALI** – PRN: 241108050
-* **PRUTHVIRAJ PANKAJ MAHAJAN** – PRN: 2411080
+* **PAWAN KISHORE MALI** – PRN: 241108056
+* **PRUTHVIRAJ PANKAJ MAHAJAN** – PRN: 241108076
 * **VAIBHAV RAVINDRA NHAYADE** – PRN: 241108091
-* **VISHAL SURESH MALI** – PRN: 241108091
+* **VISHAL SURESH MALI** – PRN: 241108095
 
 ---
 

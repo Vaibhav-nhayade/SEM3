@@ -4,10 +4,10 @@
 
 ## **Project Team**
 
-* **A** – Roll No: 241108000
-* **B** – Roll No: 241108080
-* **C** – Roll No: 241108091
-* **D** – Roll No: 241108091
+* **PAWAN KISHORE MALI** – Roll No: 241108050
+* **PRUTHVIRAJ PANKAJ MAHAJAN** – Roll No: 2411080
+* **VAIBHAV RAVINDRA NHAYADE** – Roll No: 241108091
+* **VISHAL SURESH MALI** – Roll No: 241108091
 
 ---
 

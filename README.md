@@ -4,10 +4,10 @@
 
 ## **Project Team**
 
-* **PAWAN KISHORE MALI** – Roll No: 241108050
-* **PRUTHVIRAJ PANKAJ MAHAJAN** – Roll No: 2411080
-* **VAIBHAV RAVINDRA NHAYADE** – Roll No: 241108091
-* **VISHAL SURESH MALI** – Roll No: 241108091
+* **PAWAN KISHORE MALI** – PRN: 241108050
+* **PRUTHVIRAJ PANKAJ MAHAJAN** – PRN: 2411080
+* **VAIBHAV RAVINDRA NHAYADE** – PRN: 241108091
+* **VISHAL SURESH MALI** – PRN: 241108091
 
 ---
 
@@ -37,7 +37,7 @@ This project is a **Quiz Generator** that allows the user to create custom quizz
 
 ## **Technologies Used**
 
-* Programming Language: *Python* (or specify actual language)
+* Programming Language: *Python* and html5
 * Input/Output Handling
 * Randomization for question selection
 

@@ -1,65 +1,66 @@
-<script>
-  const MAX_CHARS = 500;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-100 to-purple-200 min-h-screen flex items-center justify-center p-6">
+  <div class="bg-white shadow-2xl rounded-2xl p-8 max-w-2xl w-full">
+    <h1 class="text-3xl font-bold text-indigo-700 mb-4">📚 Quiz Generator</h1>
+    <p class="text-gray-600 mb-6">Paste a paragraph below and generate quiz questions instantly.</p>
 
-  // Clamp while typing (no UI change)
-  (function clampInputs() {
-    const paragraphEl = document.getElementById('paragraph');
-    const countEl = document.getElementById('questionCount');
+    <textarea id="paragraph" class="w-full p-4 border rounded-lg focus:ring-2 focus:ring-indigo-400 mb-4" rows="6" placeholder="Paste your paragraph here..."></textarea>
 
-    paragraphEl.addEventListener('input', (e) => {
-      if (e.target.value.length > MAX_CHARS) {
-        e.target.value = e.target.value.slice(0, MAX_CHARS);
+    <div class="flex gap-4 mb-4">
+      <select id="quizType" class="p-3 border rounded-lg flex-1 focus:ring-2 focus:ring-indigo-400">
+        <option value="mcq">Multiple Choice</option>
+        <option value="truefalse">True/False</option>
+        <option value="fillblank">Fill in the Blank</option>
+      </select>
+
+      <input type="number" id="questionCount" class="p-3 border rounded-lg w-24 focus:ring-2 focus:ring-indigo-400" placeholder="Qty" min="1" max="10">
+    </div>
+
+    <button onclick="generateQuiz()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition">Generate Quiz</button>
+
+    <div id="quizOutput" class="mt-6 p-4 bg-gray-50 rounded-lg border text-gray-700 hidden"></div>
+  </div>
+
+  <script>
+    async function generateQuiz() {
+      const paragraph = document.getElementById('paragraph').value;
+      const quizType = document.getElementById('quizType').value;
+      const questionCount = document.getElementById('questionCount').value;
+
+      if (!paragraph.trim()) {
+        alert("Please enter a paragraph.");
+        return;
       }
-    });
 
-    countEl.addEventListener('input', () => {
-      const n = parseInt(countEl.value || '0', 10);
-      if (n > 10) countEl.value = 10;
-      if (n < 1) countEl.value = 1;
-    });
-  })();
+      // Backend API call
+      const response = await fetch("http://localhost:5000/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paragraph, quizType, questionCount })
+      });
 
-  // Your existing function – just add these checks at the top
-  async function generateQuiz() {
-    const paragraph = document.getElementById('paragraph').value.trim();
-    const quizType = document.getElementById('quizType').value;
-    const questionCount = document.getElementById('questionCount').value;
+      const data = await response.json();
+      const quizOutput = document.getElementById('quizOutput');
+      quizOutput.innerHTML = "";
 
-    // NEW: lightweight validation (no visual changes)
-    if (!paragraph) {
-      alert("Please enter a paragraph.");
-      return;
+      data.questions.forEach((q, i) => {
+        quizOutput.innerHTML += `<p class="mb-2 font-semibold">${i + 1}. ${q.question}</p>`;
+        if (q.options) {
+          q.options.forEach(opt => {
+            quizOutput.innerHTML += `<p class="ml-4">- ${opt}</p>`;
+          });
+        }
+      });
+
+      quizOutput.classList.remove("hidden");
     }
-    if (paragraph.length > MAX_CHARS) {
-      alert(`Paragraph must be ${MAX_CHARS} characters or fewer.`);
-      return;
-    }
-    const qty = parseInt(questionCount || '0', 10);
-    if (isNaN(qty) || qty < 1 || qty > 10) {
-      alert("Number of questions must be between 1 and 10.");
-      return;
-    }
-
-    // ...the rest of your existing code stays the same
-    const response = await fetch("http://localhost:5000/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ paragraph, quizType, questionCount: qty })
-    });
-
-    const data = await response.json();
-    const quizOutput = document.getElementById('quizOutput');
-    quizOutput.innerHTML = "";
-
-    data.questions.forEach((q, i) => {
-      quizOutput.innerHTML += `<p class="mb-2 font-semibold">${i + 1}. ${q.question}</p>`;
-      if (q.options) {
-        q.options.forEach(opt => {
-          quizOutput.innerHTML += `<p class="ml-4">- ${opt}</p>`;
-        });
-      }
-    });
-
-    quizOutput.classList.remove("hidden");
-  }
-</script>
+  </script>
+</body>
+</html>

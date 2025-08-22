@@ -1,49 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your Quiz</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gradient-to-br from-green-100 to-blue-200 min-h-screen flex items-center justify-center p-6">
-  <div class="bg-white shadow-2xl rounded-2xl p-8 max-w-3xl w-full">
-    <h1 class="text-3xl font-bold text-green-700 mb-6">📝 Generated Quiz</h1>
-    <div id="quizOutput" class="text-gray-800"></div>
-    <a href="index.html" class="mt-6 inline-block bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold">🔙 Back</a>
-  </div>
+<script>
+  const MAX_CHARS = 500;
 
-  <script>
-    async function loadQuiz() {
-      const quizData = JSON.parse(localStorage.getItem("quizData"));
-      if (!quizData) {
-        document.getElementById("quizOutput").innerHTML = "<p class='text-red-500'>No quiz data found. Please go back and generate again.</p>";
-        return;
+  // Clamp while typing (no UI change)
+  (function clampInputs() {
+    const paragraphEl = document.getElementById('paragraph');
+    const countEl = document.getElementById('questionCount');
+
+    paragraphEl.addEventListener('input', (e) => {
+      if (e.target.value.length > MAX_CHARS) {
+        e.target.value = e.target.value.slice(0, MAX_CHARS);
       }
+    });
 
-      // Fetch from backend
-      const response = await fetch("http://localhost:5000/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(quizData)
-      });
+    countEl.addEventListener('input', () => {
+      const n = parseInt(countEl.value || '0', 10);
+      if (n > 10) countEl.value = 10;
+      if (n < 1) countEl.value = 1;
+    });
+  })();
 
-      const data = await response.json();
-      const quizOutput = document.getElementById('quizOutput');
-      quizOutput.innerHTML = "";
+  // Your existing function – just add these checks at the top
+  async function generateQuiz() {
+    const paragraph = document.getElementById('paragraph').value.trim();
+    const quizType = document.getElementById('quizType').value;
+    const questionCount = document.getElementById('questionCount').value;
 
-      data.questions.forEach((q, i) => {
-        quizOutput.innerHTML += `<p class="mb-2 font-semibold">${i + 1}. ${q.question}</p>`;
-        if (q.options) {
-          q.options.forEach(opt => {
-            quizOutput.innerHTML += `<p class="ml-6">- ${opt}</p>`;
-          });
-        }
-        quizOutput.innerHTML += "<hr class='my-3'>";
-      });
+    // NEW: lightweight validation (no visual changes)
+    if (!paragraph) {
+      alert("Please enter a paragraph.");
+      return;
+    }
+    if (paragraph.length > MAX_CHARS) {
+      alert(`Paragraph must be ${MAX_CHARS} characters or fewer.`);
+      return;
+    }
+    const qty = parseInt(questionCount || '0', 10);
+    if (isNaN(qty) || qty < 1 || qty > 10) {
+      alert("Number of questions must be between 1 and 10.");
+      return;
     }
 
-    loadQuiz();
-  </script>
-</body>
-</html>
+    // ...the rest of your existing code stays the same
+    const response = await fetch("http://localhost:5000/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ paragraph, quizType, questionCount: qty })
+    });
+
+    const data = await response.json();
+    const quizOutput = document.getElementById('quizOutput');
+    quizOutput.innerHTML = "";
+
+    data.questions.forEach((q, i) => {
+      quizOutput.innerHTML += `<p class="mb-2 font-semibold">${i + 1}. ${q.question}</p>`;
+      if (q.options) {
+        q.options.forEach(opt => {
+          quizOutput.innerHTML += `<p class="ml-4">- ${opt}</p>`;
+        });
+      }
+    });
+
+    quizOutput.classList.remove("hidden");
+  }
+</script>

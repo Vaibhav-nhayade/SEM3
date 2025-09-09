@@ -1,5 +1,5 @@
 
-**RC Patel Institute of Technology, Shirpur** <br>
+**RC Patel Institute of Technology, Shirpur.** <br>
 **Department of AI & DS – Semester 3**
 
 ## **Project Team**

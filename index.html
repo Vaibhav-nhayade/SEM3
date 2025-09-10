@@ -20,6 +20,7 @@
         <option value="fillblank">Fill in the Blank</option>
       </select>
 
+      <!-- QTY input restricted to 1–10 -->
       <input type="number" id="questionCount" class="p-3 border rounded-lg w-24 focus:ring-2 focus:ring-indigo-400" placeholder="Qty" min="1" max="10">
     </div>
 
@@ -33,6 +34,13 @@
       const paragraph = document.getElementById('paragraph').value;
       const quizType = document.getElementById('quizType').value;
       const questionCount = document.getElementById('questionCount').value;
+
+      // Paragraph must be at least 100 words
+      const wordCount = paragraph.trim().split(/\s+/).length;
+      if (wordCount < 100) {
+        alert("Paragraph must contain at least 100 words.");
+        return;
+      }
 
       if (!paragraph.trim()) {
         alert("Please enter a paragraph.");

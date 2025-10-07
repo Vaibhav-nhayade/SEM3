@@ -1,74 +1,280 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quiz Generator</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Study Question Generator</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for font and look */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        :root {
+            --primary-color: #4f46e5; /* Indigo-600 */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Slate-50 */
+        }
+
+        /* Custom spinner for better visual feedback */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-100 to-purple-200 min-h-screen flex items-center justify-center p-6">
-  <div class="bg-white shadow-2xl rounded-2xl p-8 max-w-2xl w-full">
-    <h1 class="text-3xl font-bold text-indigo-700 mb-4">📚 Quiz Generator</h1>
-    <p class="text-gray-600 mb-6">Paste a paragraph below and generate quiz questions instantly.</p>
+<body class="p-4 sm:p-8 min-h-screen">
 
-    <textarea id="paragraph" class="w-full p-4 border rounded-lg focus:ring-2 focus:ring-indigo-400 mb-4" rows="6" placeholder="Paste your paragraph here..."></textarea>
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-3xl p-6 sm:p-10 border border-indigo-100">
 
-    <div class="flex gap-4 mb-4">
-      <select id="quizType" class="p-3 border rounded-lg flex-1 focus:ring-2 focus:ring-indigo-400">
-        <option value="mcq">Multiple Choice</option>
-        <option value="truefalse">True/False</option>
-        <option value="fillblank">Fill in the Blank</option>
-      </select>
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2 flex items-center justify-center">
+                🧠 Smart Study Question Generator
+            </h1>
+            <p class="text-lg text-gray-500 max-w-2xl mx-auto">
+                Paste any text and instantly generate custom, thought-provoking questions for learning or review.
+            </p>
+        </header>
 
-      <!-- QTY input restricted to 1–10 -->
-      <input type="number" id="questionCount" class="p-3 border rounded-lg w-24 focus:ring-2 focus:ring-indigo-400" placeholder="Qty" min="1" max="10">
+        <main class="grid lg:grid-cols-3 gap-8">
+            
+            <!-- Left Column: Input and Controls -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <h2 class="text-2xl font-semibold text-gray-700">📝 Input Text</h2>
+                
+                <textarea 
+                    id="paragraphInput" 
+                    rows="10" 
+                    class="w-full p-4 border-2 border-indigo-200 rounded-xl focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition duration-150 shadow-inner resize-y"
+                    placeholder="Example: The invention of the printing press by Johannes Gutenberg in the mid-15th century is widely regarded as the most important event of the second millennium. It allowed for the rapid and widespread dissemination of knowledge, fundamentally changing European society and accelerating the Renaissance and the Scientific Revolution."
+                ></textarea>
+
+                <div class="flex flex-col sm:flex-row items-center gap-4 bg-indigo-50 p-4 rounded-xl shadow-sm border border-indigo-200">
+                    <label for="numQuestions" class="text-lg font-medium text-gray-700 whitespace-nowrap">
+                        Number of Questions: <span id="numQuestionsValue" class="text-indigo-600 font-bold">5</span>
+                    </label>
+                    <input 
+                        type="range" 
+                        id="numQuestions" 
+                        min="1" 
+                        max="15" 
+                        value="5" 
+                        oninput="document.getElementById('numQuestionsValue').innerText = this.value"
+                        class="w-full h-2 bg-indigo-200 rounded-lg appearance-none cursor-pointer range-lg transition duration-150"
+                    >
+                </div>
+
+                <button 
+                    id="generateBtn" 
+                    class="w-full flex items-center justify-center py-3 px-6 border border-transparent rounded-xl shadow-lg text-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 transition duration-200 ease-in-out transform hover:scale-[1.01] active:scale-[0.99]"
+                    onclick="handleGeneration()"
+                >
+                    <span id="buttonText">✨ Generate Study Questions</span>
+                    <div id="loadingIndicator" class="hidden spinner ml-3"></div>
+                </button>
+            </div>
+            
+            <!-- Right Column: Results -->
+            <div class="lg:col-span-1">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">✅ Generated Results</h2>
+                
+                <div 
+                    id="resultsContainer" 
+                    class="min-h-[300px] bg-gray-50 p-5 rounded-xl border-2 border-dashed border-gray-200 text-gray-600 flex items-center justify-center text-center italic transition duration-300"
+                >
+                    Results will appear here.
+                </div>
+            </div>
+
+        </main>
+        
+        <footer class="text-center mt-12 pt-6 border-t border-gray-100">
+            <p class="text-sm text-gray-400">
+                AI Generation powered by the Google Gemini API.
+            </p>
+        </footer>
     </div>
 
-    <button onclick="generateQuiz()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition">Generate Quiz</button>
+    <script>
+        const API_KEY = ""; // Canvas will automatically provide the key
+        const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent";
 
-    <div id="quizOutput" class="mt-6 p-4 bg-gray-50 rounded-lg border text-gray-700 hidden"></div>
-  </div>
+        const paragraphInput = document.getElementById('paragraphInput');
+        const numQuestionsInput = document.getElementById('numQuestions');
+        const generateBtn = document.getElementById('generateBtn');
+        const buttonText = document.getElementById('buttonText');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const resultsContainer = document.getElementById('resultsContainer');
 
-  <script>
-    async function generateQuiz() {
-      const paragraph = document.getElementById('paragraph').value;
-      const quizType = document.getElementById('quizType').value;
-      const questionCount = document.getElementById('questionCount').value;
+        /**
+         * Generic fetch utility with exponential backoff for robustness.
+         * @param {object} payload - The API request body.
+         * @param {number} maxRetries - Maximum number of retries.
+         * @param {number} delay - Initial delay in milliseconds.
+         * @returns {Promise<object>} The JSON response body.
+         */
+        async function fetchWithRetry(payload, maxRetries = 3, delay = 1000) {
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const url = `${API_URL}?key=${API_KEY}`;
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
 
-      // Paragraph must be at least 100 words
-      const wordCount = paragraph.trim().split(/\s+/).length;
-      if (wordCount < 100) {
-        alert("Paragraph must contain at least 100 words.");
-        return;
-      }
+                    if (response.ok) {
+                        return await response.json();
+                    } 
+                    
+                    // For retriable errors (e.g., rate limits, server errors)
+                    if (response.status >= 500 || response.status === 429) {
+                        await new Promise(resolve => setTimeout(resolve, delay * (2 ** i)));
+                        continue;
+                    }
+                    
+                    // Throw for unretriable errors (e.g., 400 Bad Request, 403 Forbidden)
+                    throw new Error(`API Error: ${response.status} - ${response.statusText}`);
 
-      if (!paragraph.trim()) {
-        alert("Please enter a paragraph.");
-        return;
-      }
-
-      // Backend API call
-      const response = await fetch("http://localhost:5000/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ paragraph, quizType, questionCount })
-      });
-
-      const data = await response.json();
-      const quizOutput = document.getElementById('quizOutput');
-      quizOutput.innerHTML = "";
-
-      data.questions.forEach((q, i) => {
-        quizOutput.innerHTML += `<p class="mb-2 font-semibold">${i + 1}. ${q.question}</p>`;
-        if (q.options) {
-          q.options.forEach(opt => {
-            quizOutput.innerHTML += `<p class="ml-4">- ${opt}</p>`;
-          });
+                } catch (error) {
+                    if (i === maxRetries - 1) {
+                        throw error;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, delay * (2 ** i)));
+                }
+            }
         }
-      });
 
-      quizOutput.classList.remove("hidden");
-    }
-  </script>
+        /**
+         * Handles the main logic for question generation.
+         */
+        async function handleGeneration() {
+            const text = paragraphInput.value.trim();
+            const num = parseInt(numQuestionsInput.value, 10);
+
+            if (!text) {
+                resultsContainer.innerHTML = '<p class="text-red-500 font-semibold">🚨 Please paste some text into the input area above.</p>';
+                resultsContainer.classList.remove('border-dashed');
+                return;
+            }
+
+            // UI state management (Loading)
+            generateBtn.disabled = true;
+            buttonText.textContent = 'Generating...';
+            loadingIndicator.classList.remove('hidden');
+            resultsContainer.innerHTML = '<div class="spinner"></div>';
+            resultsContainer.classList.remove('border-dashed', 'border-red-200');
+            resultsContainer.classList.add('border-indigo-500');
+
+            try {
+                const systemPrompt = "You are an expert question generation AI. Based on the provided text, generate a list of distinct, thought-provoking study questions. Respond ONLY with a JSON array of strings, where each string is a question.";
+                const userQuery = `Generate ${num} high-quality questions based on this text: "${text}"`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "ARRAY",
+                            items: { "type": "STRING" }
+                        }
+                    }
+                };
+
+                const result = await fetchWithRetry(payload);
+                
+                const candidate = result.candidates?.[0];
+                if (!candidate || !candidate.content?.parts?.[0]?.text) {
+                    throw new Error("Invalid API response format.");
+                }
+
+                const jsonText = candidate.content.parts[0].text;
+                let questions;
+
+                try {
+                    questions = JSON.parse(jsonText);
+                    if (!Array.isArray(questions)) {
+                        throw new Error("Response is not a JSON array.");
+                    }
+                } catch (e) {
+                    // Fallback in case JSON parsing fails, treat as raw text
+                    console.warn("JSON parsing failed, treating response as raw text.");
+                    questions = jsonText.split('\n').filter(q => q.trim().length > 0);
+                }
+                
+                // Render Results
+                renderQuestions(questions);
+
+            } catch (error) {
+                console.error("Generation failed:", error);
+                resultsContainer.innerHTML = `
+                    <div class="text-red-600 font-semibold">
+                        <p class="mb-2">Generation Failed.</p>
+                        <p class="text-sm font-normal">Error: ${error.message || "Could not connect to the AI model."}</p>
+                    </div>
+                `;
+                resultsContainer.classList.add('border-red-300');
+
+            } finally {
+                // UI state management (Complete)
+                generateBtn.disabled = false;
+                buttonText.textContent = '✨ Generate Study Questions';
+                loadingIndicator.classList.add('hidden');
+                resultsContainer.classList.remove('border-indigo-500');
+            }
+        }
+
+        /**
+         * Renders the generated questions into the results container.
+         * @param {string[]} questions - Array of question strings.
+         */
+        function renderQuestions(questions) {
+            if (questions.length === 0) {
+                resultsContainer.innerHTML = '<p class="text-orange-500 font-semibold">Could not generate high-quality questions. Try longer or more descriptive text.</p>';
+                resultsContainer.classList.add('border-dashed', 'border-orange-200');
+                return;
+            }
+
+            let html = '';
+            questions.forEach((q, index) => {
+                // Ensure questions are formatted nicely
+                const formattedQ = q.endsWith('?') ? q : `${q}?`;
+                html += `
+                    <div class="mb-4 p-4 bg-indigo-50 border-l-4 border-indigo-400 rounded-lg shadow-sm hover:bg-indigo-100 transition duration-150">
+                        <span class="font-bold text-indigo-700 mr-2">${index + 1}.</span>
+                        <span class="text-gray-800">${formattedQ.trim()}</span>
+                    </div>
+                `;
+            });
+
+            resultsContainer.innerHTML = `<div class="p-2 space-y-2">${html}</div>`;
+            resultsContainer.classList.remove('border-dashed');
+            resultsContainer.style.justifyContent = 'flex-start'; // Align results to the top
+            resultsContainer.style.alignItems = 'flex-start';
+        }
+        
+        // Initial state message
+        resultsContainer.innerHTML = '<p>Start by pasting your text and clicking "Generate Study Questions"!</p>';
+
+    </script>
 </body>
 </html>
+
+

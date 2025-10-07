@@ -44,7 +44,7 @@
         <!-- Header -->
         <header class="text-center mb-10">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2 flex items-center justify-center">
-                🧠 Smart Study Question Generator
+                Smart Study Question Generator
             </h1>
             <p class="text-lg text-gray-500 max-w-2xl mx-auto">
                 Paste any text and instantly generate custom, thought-provoking questions for learning or review.
@@ -85,7 +85,7 @@
                     class="w-full flex items-center justify-center py-3 px-6 border border-transparent rounded-xl shadow-lg text-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 transition duration-200 ease-in-out transform hover:scale-[1.01] active:scale-[0.99]"
                     onclick="handleGeneration()"
                 >
-                    <span id="buttonText">✨ Generate Study Questions</span>
+                    <span id="buttonText"> Generate Study Questions</span>
                     <div id="loadingIndicator" class="hidden spinner ml-3"></div>
                 </button>
             </div>
@@ -169,7 +169,7 @@
             const num = parseInt(numQuestionsInput.value, 10);
 
             if (!text) {
-                resultsContainer.innerHTML = '<p class="text-red-500 font-semibold">🚨 Please paste some text into the input area above.</p>';
+                resultsContainer.innerHTML = '<p class="text-red-500 font-semibold"> Please paste some text into the input area above.</p>';
                 resultsContainer.classList.remove('border-dashed');
                 return;
             }
@@ -235,7 +235,7 @@
             } finally {
                 // UI state management (Complete)
                 generateBtn.disabled = false;
-                buttonText.textContent = '✨ Generate Study Questions';
+                buttonText.textContent = ' Generate Study Questions';
                 loadingIndicator.classList.add('hidden');
                 resultsContainer.classList.remove('border-indigo-500');
             }

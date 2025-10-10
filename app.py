@@ -6,6 +6,22 @@ import spacy
 import nltk
 from nltk.corpus import wordnet
 
+import spacy
+import nltk
+
+# Download NLTK data
+nltk.download("wordnet", quiet=True)
+nltk.download("omw-1.4", quiet=True)
+
+# Load spaCy English model, download if missing
+try:
+    nlp = spacy.load("en_core_web_sm")
+except:
+    from spacy.cli import download
+    download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
+
+
 # ----------------------------
 #  INITIAL SETUP
 # ----------------------------

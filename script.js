@@ -70,18 +70,20 @@ quizTypeBtns.forEach(btn => {
   });
 });
 
-// Generate button placeholder logic
-// Generate button - open new page on click
+
+// Generate button - open new page on valid input
 const generateBtn = document.getElementById('generateBtn');
 generateBtn.addEventListener('click', () => {
   const input = document.getElementById('mainInput').value.trim();
 
-  if (!input) {
-    alert("Please enter a prompt first.");
+  // Count words
+  const wordCount = input.split(/\s+/).filter(word => word).length;
+
+  if (wordCount < 100) {
+    alert("Please enter at least 100 words in the paragraph to generate a quiz.");
     return;
   }
 
-  // Example: open a new page (could be your quiz result page)
-  // Replace 'quiz.html' with the correct destination
+  // Open quiz result page
   window.open('quiz.html', '_blank');
 });

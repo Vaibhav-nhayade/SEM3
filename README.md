@@ -2,15 +2,6 @@
 **RC Patel Institute of Technology, Shirpur.** <br>
 **Department of AI & DS – Semester 3**
 
-## **Project Team**
-
-* **PAWAN KISHORE MALI** – PRN: 241108056
-* **PRUTHVIRAJ PANKAJ MAHAJAN** – PRN: 241108076
-* **VAIBHAV RAVINDRA NHAYADE** – PRN: 241108091
-* **VISHAL SURESH MALI** – PRN: 241108095
-
----
-
 ## **Overview**
 
 This project is a **Quiz Generator** that allows the user to create custom quizzes based on their input. The user can select from **three types of questions** and specify the **number of questions** for each type. The system then generates a quiz accordingly.
@@ -32,16 +23,6 @@ This project is a **Quiz Generator** that allows the user to create custom quizz
 2. **Select the Question Types** you want in your quiz
 3. **Enter the Quantity** of questions for each type
 4. **Start the Quiz** and test your knowledge
-
----
-
-## **Technologies Used**
-
-* Programming Language: *Python* and html5
-* Input/Output Handling
-* Randomization for question selection
-
----
 
 ## **Purpose**
 

@@ -1,0 +1,7 @@
+/* Add custom CSS here if needed */
+
+/* Example: override benefit-popup if necessary */
+.benefit-popup {
+  transition: transform 0.18s ease, opacity 0.18s ease;
+  transform-origin: center;
+}

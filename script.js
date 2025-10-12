@@ -71,15 +71,17 @@ quizTypeBtns.forEach(btn => {
 });
 
 // Generate button placeholder logic
+// Generate button - open new page on click
 const generateBtn = document.getElementById('generateBtn');
 generateBtn.addEventListener('click', () => {
-  generateBtn.disabled = true;
-  const orig = generateBtn.innerText;
-  generateBtn.innerText = 'Generating...';
+  const input = document.getElementById('mainInput').value.trim();
 
-  setTimeout(() => {
-    generateBtn.disabled = false;
-    generateBtn.innerText = orig;
-    alert('This is a front-end demo. In a real app this would call an AI.');
-  }, 1200);
+  if (!input) {
+    alert("Please enter a prompt first.");
+    return;
+  }
+
+  // Example: open a new page (could be your quiz result page)
+  // Replace 'quiz.html' with the correct destination
+  window.open('quiz.html', '_blank');
 });

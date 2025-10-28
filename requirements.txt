@@ -1,1 +1,6 @@
-
+Flask>=2.0
+flask-cors>=3.0
+pydantic>=1.10
+python-dotenv>=0.20
+# Optional (only if you set OPENAI_API_KEY)
+openai>=0.27.0

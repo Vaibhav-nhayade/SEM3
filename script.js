@@ -163,8 +163,7 @@ quizTypeBtns.forEach(btn => {
 
 
 // ================== GENERATE BUTTON ================== //
-const generateBtn = document.getElementById('generateBtn');
-generateBtn.addEventListener('click', () => {
+generateBtn.addEventListener('click', async () => {
   const input = mainInput.value.trim();
   const wordCount = input.split(/\s+/).filter(word => word).length;
 
@@ -173,5 +172,31 @@ generateBtn.addEventListener('click', () => {
     return;
   }
 
-  window.open('quiz.html', '_blank');
+  // Get selected quiz type
+  const selectedTypeBtn = document.querySelector('.quiz-type-btn.bg-blue-600');
+  const qtype = selectedTypeBtn ? selectedTypeBtn.getAttribute('data-type') : 'MCQ';
+
+  try {
+    const res = await fetch("http://127.0.0.1:5000/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: input, type: qtype, count: 10 })
+    });
+
+    const data = await res.json();
+
+    if (!data.ok) {
+      alert("Error generating quiz. Try again.");
+      return;
+    }
+
+    // Store generated questions in sessionStorage
+    sessionStorage.setItem("generatedQuiz", JSON.stringify(data.questions));
+
+    // Open quiz.html to show questions
+    window.open('quiz.html', '_blank');
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong. Make sure backend is running.");
+  }
 });

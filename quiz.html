@@ -4,12 +4,72 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Generated Quiz</title>
-  <link href="https://cdn.tailwindcss.com" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen bg-indigo-50 flex items-center justify-center">
-  <div class="text-center">
-    <h1 class="text-3xl font-bold text-indigo-600 mb-4">Your Quiz is Ready!</h1>
-    <p class="text-gray-700">This is a placeholder page. You can render generated questions here.</p>
+<body class="min-h-screen bg-indigo-50 py-6">
+
+  <!-- Top Buttons -->
+  <div class="max-w-4xl mx-auto flex justify-between items-center px-6 mb-6">
+    <button id="homeBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Home</button>
+    <button id="printBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Print</button>
   </div>
+
+  <div class="max-w-4xl mx-auto px-6">
+    <h1 class="text-4xl font-bold text-indigo-600 mb-6 text-center">Your Generated Quiz</h1>
+    <div id="quizContainer" class="space-y-6"></div>
+  </div>
+
+  <script>
+    // Buttons
+    document.getElementById('homeBtn').addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+
+    document.getElementById('printBtn').addEventListener('click', () => {
+      window.print();
+    });
+
+    // Load generated questions
+    const raw = sessionStorage.getItem('generatedQuiz');
+    const container = document.getElementById('quizContainer');
+
+    if (!raw) {
+      container.innerHTML = `<p class="text-red-600 text-center font-semibold">No quiz found. Please generate a quiz first from the home page.</p>`;
+    } else {
+      const questions = JSON.parse(raw);
+
+      questions.forEach((q, idx) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = 'bg-white p-6 rounded-xl shadow-md';
+
+        // Question text
+        let html = `<p class="font-semibold text-lg mb-2">${idx + 1}. ${q.question}</p>`;
+
+        // Options (for MCQ)
+        if (q.options && q.options.length) {
+          html += '<div class="ml-4 space-y-1">';
+          q.options.forEach(opt => {
+            html += `<div class="flex items-center gap-2"><span class="text-gray-700">•</span> ${opt}</div>`;
+          });
+          html += '</div>';
+        }
+
+        // Answer and explanation
+        if (q.answer) {
+          html += `<p class="mt-2 text-green-700"><strong>Answer:</strong> ${q.answer}</p>`;
+        }
+        if (q.explanation) {
+          html += `<p class="mt-1 text-gray-600 italic">${q.explanation}</p>`;
+        }
+
+        qDiv.innerHTML = html;
+        container.appendChild(qDiv);
+
+        // Debug: print questions in console
+        console.log("Question", idx + 1, q);
+      });
+    }
+  </script>
+
 </body>
 </html>
